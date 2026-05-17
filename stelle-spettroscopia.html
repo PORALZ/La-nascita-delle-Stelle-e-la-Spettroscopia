@@ -1,0 +1,999 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>La Nascita delle Stelle & Spettroscopia</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;1,9..40,300;1,9..40,400&family=Space+Grotesk:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
+mark {
+  background-color: #C8A96E;
+  color: black;
+}
+:root{
+  --ink:#0a0a14;
+  --deep:#06060f;
+  --gold:#c8a96e;
+  --gold2:#e8c98a;
+  --cyan:#4fc3d4;
+  --violet:#7b5ea7;
+  --rose:#e8637a;
+  --text:#d8d4c8;
+  --muted:#8a8070;
+}
+html{scroll-behavior:smooth}
+body{
+  background:#020409;
+  color:var(--text);
+  font-family:'DM Sans',sans-serif;
+  font-size:17px;
+  line-height:1.75;
+  overflow-x:hidden;
+  cursor:none;
+}
+/* CUSTOM CURSOR */
+.cursor{
+  position:fixed;width:10px;height:10px;
+  background:var(--gold);border-radius:50%;
+  pointer-events:none;z-index:9999;
+  transform:translate(-50%,-50%);
+  transition:transform 0.1s ease;
+  mix-blend-mode:difference;
+}
+.cursor-ring{
+  position:fixed;width:36px;height:36px;
+  border:1px solid var(--gold);
+  border-radius:50%;pointer-events:none;
+  z-index:9998;transform:translate(-50%,-50%);
+  transition:all 0.15s ease;opacity:0.6;
+}
+
+/* BACKGROUND */
+#bg-layer{
+  position:fixed;top:0;left:0;width:100%;height:100%;
+  z-index:0;pointer-events:none;
+  background-image:url('https://upload.wikimedia.org/wikipedia/commons/thumb/a/a0/Hubble_ultra_deep_field.jpg/1200px-Hubble_ultra_deep_field.jpg');
+  background-size:cover;background-position:center;
+  filter:brightness(0.28) saturate(1.4);
+}
+#bg-overlay{
+  position:fixed;top:0;left:0;width:100%;height:100%;
+  z-index:0;pointer-events:none;
+  background:radial-gradient(ellipse at 20% 50%,rgba(60,20,90,0.45) 0%,transparent 60%),
+             radial-gradient(ellipse at 80% 20%,rgba(10,40,100,0.4) 0%,transparent 55%),
+             linear-gradient(to bottom,rgba(2,4,9,0.3),rgba(2,4,9,0.7));
+}
+
+/* NEBULA BLOBS */
+.nebula-blob{
+  position:fixed;border-radius:50%;
+  filter:blur(120px);opacity:0.12;
+  pointer-events:none;z-index:0;
+  animation:nebulaDrift 20s ease-in-out infinite alternate;
+}
+.nb1{width:700px;height:700px;background:radial-gradient(circle,#7b3b6e,transparent);top:-200px;left:-200px}
+.nb2{width:600px;height:600px;background:radial-gradient(circle,#1e4d8c,transparent);bottom:-100px;right:-100px;animation-delay:-8s}
+.nb3{width:500px;height:500px;background:radial-gradient(circle,#3d1f6b,transparent);top:40%;left:60%;animation-delay:-15s}
+@keyframes nebulaDrift{
+  0%{transform:scale(1) translate(0,0)}
+  100%{transform:scale(1.3) translate(30px,-30px)}
+}
+
+/* NAV */
+nav{
+  position:fixed;top:0;left:0;width:100%;z-index:100;
+  padding:1.5rem 4rem;
+  display:flex;justify-content:space-between;align-items:center;
+  border-bottom:1px solid rgba(200,169,110,0.1);
+  backdrop-filter:blur(20px);
+  background:rgba(6,6,15,0.5);
+  transition:background 0.3s;
+}
+.nav-logo{
+  font-family:'Space Grotesk',sans-serif;font-weight:700;
+  font-size:0.85rem;letter-spacing:0.25em;text-transform:uppercase;
+  color:var(--gold);text-decoration:none;
+}
+.nav-links{display:flex;gap:2.5rem;list-style:none}
+.nav-links a{
+  font-family:'Space Grotesk',sans-serif;font-size:0.7rem;
+  letter-spacing:0.2em;text-transform:uppercase;
+  color:var(--muted);text-decoration:none;
+  transition:color 0.3s;
+}
+.nav-links a:hover{color:var(--gold)}
+
+/* HERO */
+#hero{
+  position:relative;min-height:100vh;
+  display:flex;align-items:center;justify-content:center;
+  text-align:center;padding:0 2rem;
+  overflow:hidden;z-index:1;
+}
+.hero-eyebrow{
+  font-family:'Space Grotesk',sans-serif;font-size:0.7rem;
+  letter-spacing:0.4em;text-transform:uppercase;
+  color:var(--gold);margin-bottom:2rem;
+  opacity:0;animation:fadeUp 1s forwards 0.5s;
+}
+.hero-title{
+  font-size:clamp(3.5rem,9vw,9rem);
+  font-weight:300;line-height:0.95;
+  font-style:normal;letter-spacing:-0.04em;
+  font-family:'Space Grotesk',sans-serif;
+  color:#fff;margin-bottom:1rem;
+  opacity:0;animation:fadeUp 1.2s forwards 0.8s;
+}
+.hero-title span{color:var(--gold);font-weight:700}
+.hero-subtitle{
+  font-size:clamp(1.2rem,2.5vw,2rem);
+  font-weight:300;color:var(--muted);
+  margin-bottom:3rem;letter-spacing:0.02em;
+  font-family:'DM Sans',sans-serif;
+  opacity:0;animation:fadeUp 1.2s forwards 1.1s;
+}
+.hero-desc{
+  max-width:540px;margin:0 auto 3rem;
+  font-size:1rem;color:var(--muted);
+  opacity:0;animation:fadeUp 1.2s forwards 1.4s;
+}
+.hero-scroll{
+  position:absolute;bottom:3rem;left:50%;transform:translateX(-50%);
+  display:flex;flex-direction:column;align-items:center;gap:0.5rem;
+  font-family:'Space Grotesk',sans-serif;font-size:0.6rem;
+  letter-spacing:0.3em;text-transform:uppercase;
+  color:var(--muted);
+  opacity:0;animation:fadeUp 1s forwards 2s;
+}
+.scroll-line{
+  width:1px;height:50px;background:var(--gold);
+  animation:scrollLine 2s ease-in-out infinite;
+}
+@keyframes scrollLine{
+  0%{transform:scaleY(0);transform-origin:top}
+  50%{transform:scaleY(1);transform-origin:top}
+  51%{transform:scaleY(1);transform-origin:bottom}
+  100%{transform:scaleY(0);transform-origin:bottom}
+}
+@keyframes fadeUp{
+  from{opacity:0;transform:translateY(40px)}
+  to{opacity:1;transform:translateY(0)}
+}
+
+/* SECTIONS */
+section{
+  position:relative;z-index:1;
+  padding:7rem 4rem;max-width:1400px;
+  margin:0 auto;
+}
+.section-number{
+  font-family:'Space Grotesk',sans-serif;font-size:0.65rem;
+  letter-spacing:0.4em;text-transform:uppercase;
+  color:var(--gold);opacity:0.6;margin-bottom:1rem;
+  display:block;
+}
+.section-title{
+  font-size:clamp(2.5rem,5vw,5rem);
+  font-weight:700;line-height:1.05;
+  font-style:normal;color:#fff;
+  font-family:'Space Grotesk',sans-serif;
+  letter-spacing:-0.03em;
+  margin-bottom:1.5rem;
+}
+.section-title em{color:var(--gold);font-style:normal}
+.divider{
+  width:80px;height:1px;background:var(--gold);
+  opacity:0.4;margin:2rem 0;
+}
+
+/* FEATURE GRID */
+.feature-grid{
+  display:grid;grid-template-columns:1fr 1fr;
+  gap:0;margin-top:5rem;
+}
+.feature-cell{
+  padding:3rem;border:1px solid rgba(200,169,110,0.12);
+  transition:background 0.4s;
+  opacity:0;transform:translateY(30px);
+  transition:opacity 0.8s ease, transform 0.8s ease, background 0.3s;
+}
+.feature-cell:hover{background:rgba(200,169,110,0.04)}
+.feature-cell.visible{opacity:1;transform:translateY(0)}
+.feature-num{
+  font-family:'Space Grotesk',sans-serif;font-size:3rem;
+  font-weight:700;color:rgba(200,169,110,0.15);
+  line-height:1;margin-bottom:1rem;
+}
+.feature-title{
+  font-size:1.1rem;font-weight:600;
+  font-family:'Space Grotesk',sans-serif;
+  color:#fff;margin-bottom:0.75rem;
+}
+.feature-text{font-size:0.9rem;color:var(--muted);line-height:1.8}
+
+/* FULL-WIDTH IMAGE BANNER */
+.img-banner{
+  position:relative;z-index:1;
+  width:100%;height:70vh;overflow:hidden;
+}
+.img-banner img{
+  width:100%;height:100%;object-fit:cover;
+  filter:brightness(0.6);
+  transition:transform 8s ease;
+}
+.img-banner:hover img{transform:scale(1.05)}
+.img-banner-caption{
+  position:absolute;bottom:3rem;left:4rem;
+  font-family:'Syne',sans-serif;font-size:0.65rem;
+  letter-spacing:0.3em;text-transform:uppercase;
+  color:var(--muted);
+}
+.img-banner-title{
+  position:absolute;bottom:3rem;right:4rem;
+  font-size:clamp(1.5rem,3vw,3rem);
+  font-style:italic;color:#fff;
+  font-weight:300;text-align:right;
+  max-width:400px;
+}
+
+/* TWO-COL LAYOUT */
+.two-col{
+  display:grid;grid-template-columns:1fr 1fr;
+  gap:6rem;align-items:center;
+}
+.two-colcolcol{
+  display:grid;grid-template-columns:0.7fr 2.3fr;
+  gap:6rem;align-items:center;
+}
+.two-colcolore{
+  display:grid;grid-template-columns:2fr 1fr;
+  gap:6rem;align-items:center;
+}
+.two-col.reverse{direction:rtl}
+.two-col.reverse > *{direction:ltr}
+.col-img{
+  position:relative;overflow:hidden;
+  border-radius:0px;
+}
+.col-img img{
+  width:100%;height:500px;object-fit:cover;
+  filter:brightness(0.75) saturate(1.2);
+  transition:transform 0.8s ease;
+}
+.col-img:hover img{transform:scale(1.05)}
+.col-img::after{
+  content:'';position:absolute;inset:0;
+  border:0px solid rgba(200,169,110,0.3);
+  pointer-events:none;
+}
+
+/* SPECTRUM BAR */
+.spectrum-container{
+  margin:4rem 0;
+  opacity:0;transform:translateY(20px);
+  transition:opacity 1s ease, transform 1s ease;
+}
+.spectrum-container.visible{opacity:1;transform:translateY(0)}
+.spectrum-label{
+  font-family:'Space Grotesk',sans-serif;font-size:0.65rem;
+  letter-spacing:0.3em;text-transform:uppercase;
+  color:var(--muted);margin-bottom:1rem;
+  display:block;
+}
+.spectrum-bar{
+  height:30px;width:100%;border-radius:2px;
+  background:linear-gradient(to right,
+    #380088,#4400cc,#5500ff,#2277ff,#00aaff,
+    #00dddd,#00ff88,#44ff00,#88ff00,#ccff00,
+    #ffff00,#ffcc00,#ff9900,#ff6600,#ff3300,#cc0000);
+  position:relative;margin-bottom:0.5rem;
+}
+.spectrum-lines{
+  position:relative;height:60px;
+}
+.spec-line{
+  position:absolute;top:0;width:2px;height:40px;
+  animation:specFlicker 3s ease-in-out infinite;
+}
+@keyframes specFlicker{
+  0%,100%{opacity:1} 50%{opacity:0.4}
+}
+.spec-labels{
+  display:flex;justify-content:space-between;
+  font-family:'Space Grotesk',sans-serif;font-size:0.6rem;
+  letter-spacing:0.2em;color:var(--muted);
+  margin-top:0.5rem;
+}
+
+/* PROCESS TIMELINE */
+.timeline{
+  position:relative;margin:4rem 0;
+  padding-left:3rem;
+}
+.timeline::before{
+  content:'';position:absolute;left:0;top:0;bottom:0;
+  width:1px;background:linear-gradient(to bottom,transparent,var(--gold),transparent);
+  opacity:0.4;
+}
+.tl-item{
+  position:relative;margin-bottom:4rem;
+  opacity:0;transform:translateX(-20px);
+  transition:opacity 0.8s ease, transform 0.8s ease;
+}
+.tl-item.visible{opacity:1;transform:translateX(0)}
+.tl-dot{
+  position:absolute;left:-3.4rem;top:0.4rem;
+  width:10px;height:10px;border-radius:50%;
+  background:var(--gold);box-shadow:0 0 20px var(--gold);
+  animation:dotPulse 2s ease-in-out infinite;
+}
+@keyframes dotPulse{
+  0%,100%{box-shadow:0 0 8px var(--gold)}
+  50%{box-shadow:0 0 20px var(--gold),0 0 40px rgba(200,169,110,0.3)}
+}
+.tl-phase{
+  font-family:'Space Grotesk',sans-serif;font-size:0.65rem;
+  letter-spacing:0.3em;text-transform:uppercase;
+  color:var(--gold);margin-bottom:0.5rem;
+}
+.tl-phaseonore{
+  font-family:'Space Grotesk',sans-serif;font-size:1rem;
+  letter-spacing:0.3em;text-transform:uppercase;
+  color:var(--gold);margin-bottom:0.5rem;
+}
+.tl-title{font-size:1.3rem;font-weight:600;font-family:'Space Grotesk',sans-serif;color:#fff;margin-bottom:0.5rem}
+.tl-titleonore{font-size:1.1rem;font-family:'Space Grotesk',sans-serif;color:#fff;margin-bottom:0.5rem}
+.tl-text{font-size:0.9rem;color:var(--muted);max-width:600px;line-height:1.8}
+
+/* IMAGE MOSAIC */
+.mosaic{
+  display:grid;
+  grid-template-columns:2fr 1fr 1fr;
+  grid-template-rows:300px 300px;
+  gap:4px;margin:5rem 0;
+  width:100vw;position:relative;left:50%;transform:translateX(-50%);
+}
+.mosaic-item{overflow:hidden;position:relative}
+.mosaic-item:first-child{grid-row:1/3}
+.mosaic-item img{
+  width:100%;height:100%;object-fit:cover;
+  filter:brightness(0.7) saturate(1.1);
+  transition:transform 0.8s ease, filter 0.8s ease;
+}
+.mosaic-item:hover img{transform:scale(1.08);filter:brightness(0.85) saturate(1.3)}
+.mosaic-overlay{
+  position:absolute;bottom:0;left:0;right:0;
+  padding:1.5rem;
+  background:linear-gradient(transparent,rgba(6,6,15,0.85));
+  font-family:'Space Grotesk',sans-serif;font-size:0.6rem;
+  letter-spacing:0.25em;text-transform:uppercase;
+  color:var(--muted);opacity:0;transition:opacity 0.4s;
+}
+.mosaic-item:hover .mosaic-overlay{opacity:1}
+
+/* QUOTE BLOCK */
+.quote-block{
+  position:relative;z-index:1;
+  padding:7rem 4rem;text-align:center;
+  background:linear-gradient(135deg,rgba(123,94,167,0.08),rgba(79,195,212,0.08));
+  border-top:1px solid rgba(200,169,110,0.1);
+  border-bottom:1px solid rgba(200,169,110,0.1);
+}
+.quote-mark{
+  font-size:6rem;line-height:0.5;
+  color:var(--gold);opacity:0.25;
+  font-family:'Space Grotesk',sans-serif;
+}
+.quote-text{
+  font-size:clamp(1.2rem,2.5vw,2rem);
+  font-style:italic;font-weight:300;
+  color:#fff;max-width:800px;margin:1rem auto 1.5rem;
+  line-height:1.5;
+}
+.quote-author{
+  font-family:'Space Grotesk',sans-serif;font-size:0.7rem;
+  letter-spacing:0.3em;text-transform:uppercase;
+  color:var(--gold);
+}
+
+/* SPECTROSCOPY SECTION */
+.spec-types{
+  display:grid;grid-template-columns:repeat(3,1fr);
+  gap:2px;margin-top:4rem;
+}
+.spec-type{
+  padding:2.5rem;background:rgba(255,255,255,0.02);
+  border:1px solid rgba(200,169,110,0.1);
+  transition:all 0.4s;
+  opacity:0;transform:translateY(20px);
+  transition:opacity 0.8s ease,transform 0.8s ease,background 0.3s;
+}
+.spec-type.visible{opacity:1;transform:translateY(0)}
+.spec-type:hover{background:rgba(200,169,110,0.05);border-color:rgba(200,169,110,0.3)}
+.spec-icon{
+  width:50px;height:3px;margin-bottom:1.5rem;
+  border-radius:1px;
+}
+.spec-type-title{font-size:1rem;font-weight:600;font-family:'Space Grotesk',sans-serif;color:#fff;margin-bottom:0.75rem}
+.spec-type-text{font-size:0.9rem;color:var(--muted);line-height:1.8}
+
+/* ELEMENTS TABLE */
+.elements-grid{
+  display:grid;grid-template-columns:repeat(6,minmax(160px,1fr));
+  gap:1px;margin:4rem 0;background:rgba(200,169,110,0.1);
+  border:1px solid rgba(200,169,110,0.1);
+}
+.element-card{
+  background:rgba(2,4,9,0.85);padding:1.5rem;
+  text-align:center;transition:background 0.3s;
+  opacity:0;transform:scale(0.9);
+  transition:opacity 0.5s ease,transform 0.5s ease,background 0.3s;
+}
+.element-card.visible{opacity:1;transform:scale(1)}
+.element-card:hover{background:rgba(200,169,110,0.06)}
+.el-symbol{
+  font-family:'Space Grotesk',sans-serif;font-size:2rem;
+  font-weight:700;color:var(--gold);line-height:1;
+}
+.el-name{font-size:0.8rem;color:var(--muted);margin-top:0.25rem}
+.el-wave{
+  font-family:'Space Grotesk',sans-serif;font-size:0.65rem;
+  color:var(--cyan);margin-top:0.25rem;letter-spacing:0.1em;
+}
+
+/* FOOTER */
+footer{
+  position:relative;z-index:1;
+  padding:4rem;text-align:center;
+  border-top:1px solid rgba(200,169,110,0.1);
+}
+.footer-title{
+  font-size:clamp(1.5rem,3vw,2rem);
+  font-style:normal;font-weight:600;
+  font-family:'Space Grotesk',sans-serif;
+  color:#fff;margin-bottom:0.5rem;
+}
+.footer-sub{
+  font-family:'Space Grotesk',sans-serif;font-size:0.65rem;
+  letter-spacing:0.3em;text-transform:uppercase;
+  color:var(--muted);margin-bottom:2rem;
+}
+.footer-line{
+  width:1px;height:60px;background:var(--gold);
+  opacity:0.3;margin:0 auto;
+}
+
+/* UTILITY */
+.text-gold{color:var(--gold)}
+.text-cyan{color:var(--cyan)}
+.reveal{
+  opacity:0;transform:translateY(30px);
+  transition:opacity 0.9s ease,transform 0.9s ease;
+}
+.reveal.visible{opacity:1;transform:translateY(0)}
+
+/* RESPONSIVE */
+@media(max-width:900px){
+  nav{padding:1rem 1.5rem}
+  section{padding:4rem 1.5rem}
+  .feature-grid,.two-col,.spec-types{grid-template-columns:1fr}
+  .two-col.reverse{direction:ltr}
+  .mosaic{grid-template-columns:1fr 1fr;grid-template-rows:auto}
+  .mosaic-item:first-child{grid-column:1/3;grid-row:auto}
+  .hero-title{font-size:3.5rem}
+}
+</style>
+</head>
+<body>
+
+<div class="cursor" id="cursor"></div>
+<div class="cursor-ring" id="cursorRing"></div>
+<canvas id="starfield"></canvas>
+<div class="nebula-blob nb1"></div>
+<div class="nebula-blob nb2"></div>
+<div class="nebula-blob nb3"></div>
+
+<!-- NAV -->
+<nav>
+  <a href="#" class="nav-logo">Stelle&nbsp;·&nbsp;Spettroscopia</a>
+  <ul class="nav-links">
+    <li><a href="#nascita">Origini</a></li>
+    <li><a href="#formazione">Formazione</a></li>
+    <li><a href="#spettroscopia">Spettroscopia</a></li>
+    <li><a href="#elementi">Composizione</a></li>
+    <li><a href="#classificazione">Classificazione</a></li>
+    <li><a href="#telescopi">Telescopi</a></li>
+  </ul>
+</nav>
+
+<!-- HERO -->
+<div id="hero">
+  <div>
+    <p class="hero-eyebrow">Astrofisica &amp; Ottica</p>
+    <h1 class="hero-title">La nascita<br>delle <span>Stelle</span></h1>
+    <p class="hero-title">e la <span>Spettroscopia</span></p>
+    <p class="hero-desc"><br>Come il cosmo crea nuove stelle dalle nubi di gas e polvere, e come la luce ci racconta i segreti dell'universo attraverso i suoi colori.<br><br><br><br><br></p>
+  </div>
+  <div class="hero-scroll">
+    <div class="scroll-line"></div>
+    Scorri
+  </div>
+</div>
+
+<!-- SECTION 1: LA NASCITA -->
+<section id="nascita">
+  <span class="section-number">01 — Origini</span>
+  <h2 class="section-title reveal">Dalla <em>Nebulosa</em><br>alla <em>Stella</em></h2>
+  <div class="divider reveal"></div>
+  <div class="two-col">
+    <div class="reveal" style="transition-delay:0.2s">
+
+      <p>Ogni stella ha inizio in una nebulosa — una vasta nube interstellare di idrogeno, elio e tracce di elementi più pesanti. Queste nubi, fredde e sparse, possono esistere per milioni di anni in un relativo equilibrio, finché qualcosa non le disturba.</p>
+      <br>
+      <p>Un'onda d'urto di una supernova vicina, la collisione di due galassie, o semplicemente l'accumulo di massa critica — questi eventi innescano il collasso gravitazionale che darà vita a una nuova stella.</p>
+      <br>
+      <p>Man mano che la nube collassa su se stessa, frammenta in nuclei sempre più densi. Ogni nucleo diventa un <em style="color:var(--gold)">protostella</em> — un oggetto che irradia calore dalla contrazione gravitazionale, ma che non ha ancora iniziato la fusione nucleare.</p>
+    </div>
+    <div class="col-img reveal" style="transition-delay:0.4s">
+      <img src="img/Pilastri della Creazione - Nebulosa Aquila.png" alt="Pilastri della Creazione - Nebulosa Aquila">
+    </div>
+  </div>
+</section>
+
+<!-- BANNER 1 -->
+<div class="img-banner">
+  <img src="img/Nebulosa del Granchio.jpg" alt="Nebulosa del Granchio">
+  <span class="img-banner-caption">NASA / ESA — Nebulosa del Granchio, residuo di supernova</span>
+  <p class="img-banner-title">Il ciclo della materia cosmica</p>
+</div>
+
+<!-- FASI DI FORMAZIONE -->
+<section id="formazione" style="padding-top:7rem;padding-bottom:7rem;max-width:1400px;margin:0 auto;padding-left:4rem;padding-right:4rem">
+  <span class="section-number reveal">02 — Fasi di formazione</span>
+  <h2 class="section-title reveal">Il <em>Percorso</em><br>verso la <em>Nascita</em></h2>
+  <div class="divider reveal"></div>
+  <div class="two-col">
+    <div class="timeline">
+      <div class="tl-item">
+        <div class="tl-dot"></div>
+        <p class="tl-phase">Fase I — Collasso Molecolare</p>
+        <h3 class="tl-title">Nube Molecolare Gigante</h3>
+        <p class="tl-text">La materia interstellare si concentra in nubi dense con temperature vicine allo zero assoluto (10–30 K). La massa tipica supera le 10.000 masse solari. Sono le culle stellari dell'universo.</p>
+      </div>
+      <div class="tl-item">
+        <div class="tl-dot"></div>
+        <p class="tl-phase">Fase II — Frammentazione</p>
+        <h3 class="tl-title">Nucleo Protostellare</h3>
+        <p class="tl-text">La nube si frammenta in nuclei più densi. Il centro collassa più rapidamente dell'involucro esterno. Si forma un disco di accrescimento — il precursore di un futuro sistema planetario.</p>
+      </div>
+      <div class="tl-item">
+        <div class="tl-dot"></div>
+        <p class="tl-phase">Fase III — Accrescimento</p>
+        <h3 class="tl-title">Stella T Tauri</h3>
+        <p class="tl-text">La protostella diventa visibile nell'infrarosso. I potenti venti stellari disperdono il materiale circostante. La temperatura del nucleo aumenta inesorabilmente verso la soglia critica di 10 milioni di kelvin.</p>
+      </div>
+      <div class="tl-item">
+        <div class="tl-dot"></div>
+        <p class="tl-phase">Fase IV — Ignizione</p>
+        <h3 class="tl-title">Sequenza Principale</h3>
+        <p class="tl-text">La fusione termonucleare dell'idrogeno in elio si innesca nel nucleo. La pressione di radiazione bilancia la gravità. La stella raggiunge l'equilibrio idrostatico e vivrà così per miliardi di anni.</p>
+      </div>
+    </div>
+    <video autoplay muted height="251" loop>
+      <source src="vid/Video nasc stelle.mp4" type="video/mp4">
+      <source src="movie.ogg" type="video/ogg">
+    </video>
+  </div>
+</section>
+
+<!-- MOSAIC -->
+<div class="mosaic">
+  <div class="mosaic-item">
+    <img src="img/Nebulosa di Orione.jpg" alt="Nebulosa di Orione">
+    <div class="mosaic-overlay">Nebulosa di Orione — M42</div>
+  </div>
+  <div class="mosaic-item">
+    <img src="img/NGC 3603.jpg" alt="NGC 3603">
+    <div class="mosaic-overlay">NGC 3603 — Nursery stellare</div>
+  </div>
+  <div class="mosaic-item">
+    <img src="img/Galassia NGC 1300.jpg" alt="Galassia NGC 1300">
+    <div class="mosaic-overlay">NGC 1300 — Galassia a spirale barrata</div>
+  </div>
+  <div class="mosaic-item">
+    <img src="img/Nebulosa Formica.jpg" alt="Nebulosa Formica">
+    <div class="mosaic-overlay">Nebulosa Formica — Mz3</div>
+  </div>
+  <div class="mosaic-item">
+    <img src="img/Nebulosa Farfalla .jpg" alt="Butterfly Nebula">
+    <div class="mosaic-overlay">Nebulosa Farfalla — NGC 6302</div>
+  </div>
+</div>
+
+<!-- QUOTE -->
+<div class="quote-block">
+  <div class="quote-mark">"</div>
+  <p class="quote-text">Siamo fatti di polvere di stelle. Gli atomi del nostro corpo furono forgiati all'interno di stelle antiche che esplosero miliardi di anni fa.</p>
+  <span class="quote-author">Carl Sagan — Cosmo, 1980</span>
+</div>
+
+<!-- SECTION: SPETTROSCOPIA -->
+<section id="spettroscopia" style="max-width:1400px;margin:0 auto;padding:7rem 4rem">
+  <span class="section-number reveal">03 — Spettroscopia</span>
+  <h2 class="section-title reveal">Leggere la <em>Luce</em><br>delle <em>Stelle</em></h2>
+  <div class="divider reveal"></div>
+
+  <div class="two-col reverse" style="margin-bottom:5rem">
+    <div class="reveal" style="transition-delay:0.2s">
+      <p>La spettroscopia è la scienza che studia la distribuzione dell'intensità della luce in funzione della lunghezza d'onda. Quando la luce stellare attraversa un prisma o un reticolo di diffrazione, si scompone nel suo spettro — un'impronta digitale unica che rivela la composizione chimica, temperatura, velocità e persino il campo magnetico della stella.</p>
+      <br>
+      <p>Nel 1814, Joseph von Fraunhofer osservò per la prima volta le righe scure nello spettro solare — oggi chiamate <em style="color:var(--gold)">Righe di Fraunhofer</em>. Ogni riga corrisponde a un elemento chimico specifico che assorbe la luce a quella precisa lunghezza d'onda nell'atmosfera stellare.</p>
+    </div>
+    <div class="col-img reveal" style="transition-delay:0.4s">
+      <img src="img/Spettro solare con righe di Fraunhofer.jpg" alt="Spettro solare con righe di Fraunhofer">
+    </div>
+  </div>
+
+  <!-- SPECTRUM VISUALIZATION -->
+  <div class="spectrum-container">
+    <span class="spectrum-label">Spettro Visibile — da 380 nm a 700 nm</span>
+    <div class="spectrum-bar"></div>
+    <div class="spectrum-lines">
+      <div class="spec-line" style="left:50%;background:#3cff00;height:50px" title="Hβ 434nm"></div>
+      <div class="spec-line" style="left:28%;background:#53c3ff;height:50px;animation-delay:0.5s" title="Hγ 486nm"></div>
+      <div class="spec-line" style="left:97%;background:#f60000;height:50px;animation-delay:1s" title="Hα 656nm"></div>
+      <div class="spec-line" style="left:73%;background:#ff9500;width:3px;height:50px;animation-delay:0.3s" title="Na D 589nm"></div>
+      <div class="spec-line" style="left:3%;background:#7700ff;height:50px;animation-delay:0.8s" title="Ca H 397nm"></div>
+    </div>
+    <div class="spec-labels">
+      <span>380 nm — Violetto</span>
+      <span>450 nm — Blu</span>
+      <span>550 nm — Verde</span>
+      <span>600 nm — Arancio</span>
+      <span>700 nm — Rosso</span>
+    </div>
+  </div>
+
+  <!-- TYPES OF SPECTRA -->
+  <div class="spec-types">
+    <div class="spec-type">
+      <div class="spec-icon" style="background:linear-gradient(to right,violet,blue,cyan,green,yellow,orange,red)"></div>
+      <h3 class="spec-type-title">Spettro Continuo</h3>
+      <p class="spec-type-text">Emesso da un corpo solido, liquido o gas denso ad alta temperatura. Contiene tutte le lunghezze d'onda visibili. Il Sole produce uno spettro essenzialmente continuo nel suo interno.</p>
+    </div>
+    <div class="spec-type" style="transition-delay:0.2s">
+      <div class="spec-icon" style="background:#1a1a2e;background-image:repeating-linear-gradient(90deg,transparent,transparent 30px,rgba(100,200,255,0.8) 30px,rgba(100,200,255,0.8) 32px)"></div>
+      <h3 class="spec-type-title">Spettro di Emissione</h3>
+      <p class="spec-type-text">Righe luminose su sfondo scuro. Gli atomi eccitati emettono fotoni a lunghezze d'onda specifiche quando gli elettroni tornano a livelli energetici inferiori. Tipico delle nebulose a emissione.</p>
+    </div>
+    <div class="spec-type" style="transition-delay:0.4s">
+      <div class="spec-icon" style="background:linear-gradient(to right,violet,blue,cyan,green,yellow,orange,red);position:relative"></div>
+      <h3 class="spec-type-title">Spettro di Assorbimento</h3>
+      <p class="spec-type-text">Righe scure su sfondo continuo. I gas nell'atmosfera stellare assorbono specifiche lunghezze d'onda dalla radiazione continua sottostante. È la "firma" chimica di ogni stella.</p>
+    </div>
+  </div>
+</section>
+
+<!-- BANNER 2 -->
+<div class="img-banner">
+  <img src="img/Ammasso globulare 47 Tucanae.jpg" alt="Ammasso globulare 47 Tucanae">
+  <span class="img-banner-caption">Hubble Space Telescope — Ammasso globulare 47 Tucanae</span>
+  <p class="img-banner-title">Centinaia di migliaia di stelle in un unico ammasso</p>
+</div>
+
+<!-- ELEMENTI CHIMICI -->
+<section id="elementi" style="max-width:1400px;margin:0 auto;padding:7rem 4rem">
+  </div><span class="section-number reveal">04 — Composizione</span>
+  <div class="divider reveal"></div>
+  <div class="two-col">
+    <div>  
+      <h2 class="section-title reveal">Gli <em>Elementi</em><br>nelle <em>Stelle</em></h2>
+    </div>
+    <div>
+      <p class="reveal" style="max-width:600px;margin-bottom:5rem">La spettroscopia ha permesso di identificare oltre 60 elementi chimici nelle stelle. Ogni elemento lascia una firma spettrale unica — una serie di righe a lunghezze d'onda precise.</p>
+    </div>
+  </div>
+  <div class="elements-grid">
+    <div class="element-card"><div class="el-symbol">H</div><div class="el-name">Idrogeno</div><div class="el-wave">656 nm</div></div>
+    <div class="element-card" style="transition-delay:0.05s"><div class="el-symbol">He</div><div class="el-name">Elio</div><div class="el-wave">587 nm</div></div>
+    <div class="element-card" style="transition-delay:0.1s"><div class="el-symbol">C</div><div class="el-name">Carbonio</div><div class="el-wave">516 nm</div></div>
+    <div class="element-card" style="transition-delay:0.15s"><div class="el-symbol">N</div><div class="el-name">Azoto</div><div class="el-wave">568 nm</div></div>
+    <div class="element-card" style="transition-delay:0.2s"><div class="el-symbol">O</div><div class="el-name">Ossigeno</div><div class="el-wave">496 nm</div></div>
+    <div class="element-card" style="transition-delay:0.25s"><div class="el-symbol">Na</div><div class="el-name">Sodio</div><div class="el-wave">589 nm</div></div>
+    <div class="element-card" style="transition-delay:0.3s"><div class="el-symbol">Mg</div><div class="el-name">Magnesio</div><div class="el-wave">518 nm</div></div>
+    <div class="element-card" style="transition-delay:0.35s"><div class="el-symbol">Ca</div><div class="el-name">Calcio</div><div class="el-wave">393 nm</div></div>
+    <div class="element-card" style="transition-delay:0.4s"><div class="el-symbol">Fe</div><div class="el-name">Ferro</div><div class="el-wave">527 nm</div></div>
+    <div class="element-card" style="transition-delay:0.45s"><div class="el-symbol">Si</div><div class="el-name">Silicio</div><div class="el-wave">288 nm</div></div>
+    <div class="element-card" style="transition-delay:0.5s"><div class="el-symbol">S</div><div class="el-name">Zolfo</div><div class="el-wave">469 nm</div></div>
+    <div class="element-card" style="transition-delay:0.55s"><div class="el-symbol">Ti</div><div class="el-name">Titanio</div><div class="el-wave">453 nm</div></div>
+  </div>
+</section>
+
+<!-- TIPI STELLARI -->
+<section id="classificazione" style="max-width:1400px;margin:0 auto;padding:0 4rem 7rem">
+  <span class="section-number reveal">05 — Classificazione</span>
+  <div class="divider reveal"></div>
+  <h2 class="section-title reveal">La <em>Classificazione</em><br>spettrale <em>Stellare</em></h2>
+  <div class="two-colcolcol">
+    <div class="reveal" style="transition-delay:0.2s">
+      <p class="reveal" style="max-width:600px;margin-bottom:5rem">Il sistema di classificazione Harvard (O-B-A-F-G-K-M) ordina le stelle per temperatura superficiale. <br>Ogni classe ha uno spettro caratteristico. Il nostro Sole è una stella di tipo G — gialla, temperata, nella mezza età della sua vita.</p>
+    </div>
+    <div class="col-img img img reveal" style="transition-delay:0.4s">
+      <img src="img/class stelle.png" alt="Stellar Alphabet of Universe" width="100" height="10">
+    </div>
+    
+  </div>
+
+  <div class="feature-grid">
+    <div class="feature-cell">
+      <div class="feature-num" style="color:#4d6bc4">O</div>
+      <h3 class="feature-title" style="color:#4d6bc4">Tipo O — Azzurre Supercalide</h3>
+      <p class="feature-text">Temperature > 30.000 K. Raggi di emissione di elio ionizzato. Vivono solo pochi milioni di anni prima di esplodere come supernovae. Rigel e Mintaka ne sono esempi galattici.</p>
+    </div>
+    <div class="feature-cell" style="transition-delay:0.1s">
+      <div class="feature-num" style="color:#b8cbff">B</div>
+      <h3 class="feature-title" style="color:#b8cbff">Tipo B — Azzurro-Bianche</h3>
+      <p class="feature-text">Temperature 10.000–30.000 K. Righe di assorbimento di elio neutro. Spica e Rigel appartengono a questa classe. La loro luce ultravioletta intensa ionizza il gas circostante.</p>
+    </div>
+    <div class="feature-cell" style="transition-delay:0.2s">
+      <div class="feature-num" style="color:#e8ecff">A</div>
+      <h3 class="feature-title" style="color:#e8ecff">Tipo A — Bianche</h3>
+      <p class="feature-text">Temperature 7.500–10.000 K. Righe di Balmer dell'idrogeno molto intense. Sirio, la stella più brillante del cielo notturno, appartiene a questo tipo spettrale.</p>
+    </div>
+    <div class="feature-cell" style="transition-delay:0.3s">
+      <div class="feature-num" style="color:#ffe89b">G</div>
+      <h3 class="feature-title" style="color:#ffe89b">Tipo G — Gialle (come il Sole)</h3>
+      <p class="feature-text">Temperature 5.200–6.000 K. Righe del calcio ionizzato dominanti. Il nostro Sole è il prototipo di questa classe. Stelle longeve e stabili, ideali per la nascita della vita.</p>
+    </div>
+    <div class="feature-cell" style="transition-delay:0.4s">
+      <div class="feature-num" style="color:#ffb86e">K</div>
+      <h3 class="feature-title" style="color:#ffb86e">Tipo K — Arancioni</h3>
+      <p class="feature-text">Temperature 3.700–5.200 K. Righe di ossido di titanio iniziano a comparire. Arturo e Aldebaran sono stelle di tipo K. Più fredde del Sole, emettono meno luce ultravioletta.</p>
+    </div>
+    <div class="feature-cell" style="transition-delay:0.5s">
+      <div class="feature-num" style="color:#ff8a6e">M</div>
+      <h3 class="feature-title" style="color:#ff8a6e">Tipo M — Rosse Fredde</h3>
+      <p class="feature-text">Temperature < 3.700 K. Righe di ossido di titanio molto intense. Betelgeuse è una M supergigante rossa. Le nane rosse di tipo M sono le stelle più comuni nell'universo.</p>
+    </div>
+  </div>
+</section>
+
+<!-- MOSAIC -->
+<div class="mosaic">
+  <div class="mosaic-item">
+    <a href="#telescopi">
+      <img src="img/VLTnight.jpg">
+    </a>
+    <div class="mosaic-overlay">Very Large Telescope — VLT</div>
+  </div>
+  <div class="mosaic-item">
+    <a href="#spaziali">
+      <img src="img/james webb.jpg">
+    </a>
+    <div class="mosaic-overlay">James Webb Space Telescope</div>
+  </div>
+  <div class="mosaic-item">
+    <a href="#radio">
+      <img src="img/ann13016a.jpg">
+    </a>
+    <div class="mosaic-overlay">Atacama Large Millimeter Array</div>
+  </div>
+  <div class="mosaic-item">
+    <a href="#infrarosso">
+      <img src="img/spitzer space telescope.jpg">
+    </a>
+    <div class="mosaic-overlay">Spitzer Space Telescope</div>
+  </div>
+  <div class="mosaic-item">
+    <a href="#raggi">
+      <img src="img/XMM-Newton.jpg" alt="XMM-Newton">
+    </a>
+    <div class="mosaic-overlay">XMM-Newton</div>
+  </div>
+</div>
+
+<!-- FASI DI FORMAZIONE -->
+<section id="telescopi" style="padding-top:7rem;padding-bottom:7rem;max-width:1400px;margin:0 auto;padding-left:4rem;padding-right:4rem">
+  <span class="section-number reveal">06 — Telescopi</span>
+  <h2 class="section-title reveal"><em>Telescopi</em> per osservare le <em>Stelle</em></h2>
+  <div class="divider reveal"></div>
+  <p class="reveal" style="margin-bottom:5rem">I telescopi sono strumenti usati per osservare gli oggetti nello spazio, come stelle e galassie. Esistono diversi tipi di telescopi: ottici, spaziali, radio e a infrarossi, ognuno adatto a studiare particolari fenomeni astronomici. Grazie ad essi, oggi è possibile osservare stelle molto lontane e comprendere meglio l’universo.</p>
+  <div class="two-colcolore">
+    <div class="timeline">
+      <div  class="tl-item">
+        <div  class="tl-dot"></div>
+        <p class="tl-phaseonore">I. telescopi ottici riflettori</p>
+        <p class="tl-text">I telescopi riflettori utilizzano specchi per raccogliere la luce. Sono molto usati negli osservatori moderni perché permettono di ottenere immagini dettagliate delle stelle.<br><br></p>
+        
+        <h3 class="tl-titleonore">Very Large Telescope</h3>
+        <p class="reveal">Il Very Large Telescope (VLT), situato nel deserto di Atacama in Cile, è uno dei più potenti telescopi ottici al mondo. È formato da quattro grandi telescopi che possono lavorare insieme per ottenere immagini molto precise.<br><br></p>
+        
+        <h3  class="tl-titleonore">Keck Observatory</h3>
+        <p class="reveal">L’Osservatorio Keck utilizza due enormi telescopi riflettori ed è stato importante per lo studio delle stelle lontane e dei buchi neri.<br><br></p>
+        
+        <h3 class="tl-titleonore">Gran Telescopio Canarias</h3>
+        <p class="reveal">È uno dei telescopi ottici più grandi del mondo e viene usato per osservare stelle e galassie molto lontane.</p>
+        
+      </div>
+      <div  class="tl-item">
+        <div class="tl-dot"></div>
+        <p class="tl-phaseonore">II. Telescopi Spaziali</p>
+        <p class="tl-text">I telescopi spaziali si trovano fuori dall’atmosfera terrestre e possono ottenere immagini più nitide.<br><br> </p>
+
+        <h3 class="tl-titleonore">Hubble Space Telescope</h3>
+        <p class="reveal">Hubble è uno dei telescopi più famosi della storia. Ha fornito immagini spettacolari dello spazio e ha migliorato la conoscenza delle stelle e delle galassie.<br><br></p>
+        
+        <h3 class="tl-titleonore">James Webb Space Telescope</h3>
+        <p class="reveal">Il James Webb osserva soprattutto nell’infrarosso e permette di studiare stelle appena nate e galassie molto antiche.<br><br></p>
+        
+        <h3 class="tl-titleonore">Gaia</h3>
+        <p class="reveal">Gaia è un telescopio spaziale europeo progettato per mappare miliardi di stelle della Via Lattea.</p>
+      </div>
+      <div  class="tl-item">
+        <div class="tl-dot"></div>
+        <p class="tl-phaseonore">III. Radiotelescopi</p>
+        <p class="tl-text">I radiotelescopi raccolgono onde radio provenienti dallo spazio.<br><br> </p>
+
+        <h3 class="tl-titleonore">Atacama Large Millimeter Array</h3>
+        <p class="reveal">ALMA è formato da numerose antenne radio ed è usato per studiare la formazione delle stelle e dei pianeti.<br><br></p>
+        
+        <h3 class="tl-titleonore">Five-hundred-meter Aperture Spherical Telescope</h3>
+        <p class="reveal">Conosciuto come FAST, è il più grande radiotelescopio a singola antenna del mondo.<br><br></p>
+        
+        <h3 class="tl-titleonore">Very Large Array</h3>
+        <p class="reveal">Il Very Large Array è composto da molte antenne mobili e permette osservazioni radioastronomiche molto precise.</p>
+      </div>
+      <div  class="tl-item">
+        <div class="tl-dot"></div>
+        <p class="tl-phaseonore">IV. Telescopi a Infrarossi</p>
+        <p class="tl-text">I telescopi a infrarossi osservano la radiazione infrarossa emessa dalle stelle e dagli oggetti celesti.<br><br> </p>
+
+        <h3 class="tl-titleonore">Spitzer Space Telescope</h3>
+        <p class="reveal">Spitzer è un telescopio spaziale che osserva principalmente nell'infrarosso e ha studiato stelle giovani, esopianeti e galassie.<br><br></p>
+        
+        <h3 class="tl-titleonore">United Kingdom Infrared Telescope</h3>
+        <p class="reveal">Questo telescopio è situato nell'isola di La Palma ed è specializzato nelle osservazioni all’infrarosso e nello studio della formazione stellare.<br><br></p>
+      </div>
+      <div  class="tl-item">
+        <div class="tl-dot"></div>
+        <p class="tl-phaseonore">V. Telescopi a Raggi X</p>
+        <p class="tl-text">I telescopi a raggi X osservano la radiazione ad alta energia emessa da oggetti celesti estremamente caldi o densi, come buchi neri e stelle di neutroni.<br><br> </p>
+
+        <h3 class="tl-titleonore">Chandra X-ray Observatory</h3>
+        <p class="reveal">Chandra è un telescopio spaziale che osserva i raggi X, studia esplosioni stellari, buchi neri e regioni molto calde dell’universo.<br><br></p>
+        
+        <h3 class="tl-titleonore">XMM-Newton</h3>
+        <p class="reveal">XMM-Newton è un telescopio spaziale europeo che osserva sorgenti cosmiche ad altissima energia e ha studiato la struttura e l'evoluzione dell'universo.<br><br></p>
+      </div>
+    </div>
+    <div>
+      <div  class="mosaic-item reveal">
+        <img src="img/KOnight.jpg"></img>
+        <div class="mosaic-overlay">Keck Observatory</div>
+      </div>
+      <div id="spaziali"class="mosaic-item reveal">
+        <img src="img/GTCnight.jpg"></img>
+        <div class="mosaic-overlay">Gran Telescopio Canarias</div>
+      </div>
+      <div  id="telescopi"class="mosaic-item reveal">
+        <img src="img/hubble.jpeg"></img>
+        <div class="mosaic-overlay">Hubble Space Telescope</div>
+      </div>
+      <div id="radio"class="mosaic-item reveal">
+        <img src="img/gaia.jpg"></img>
+        <div class="mosaic-overlay">Gaia</div>
+      </div>
+      <div class="mosaic-item reveal">
+        <img src="img/five hundred meter telescope.jpg"></img>
+        <div class="mosaic-overlay">Five-hundred-meter Aperture Telescope</div>
+      </div>
+      <div id="infrarosso"class="mosaic-item reveal">
+        <img src="img/VLAArrayNiteClouds_RGB.jpg"></img>
+        <div class="mosaic-overlay">Very Large Array</div>
+      </div>
+      <div id="raggi"class="mosaic-item reveal">
+        <img src="img/UK_Infrared_Telescope.jpg"></img>
+        <div class="mosaic-overlay">United Kingdom Infrared Telescope</div>
+      </div>
+      <div class="mosaic-item reveal">
+        <img src="img/NASA_Infrared_Telescope_Facility.jpg"></img>
+        <div class="mosaic-overlay">NASA Infrared Telescope Facility</div>
+      </div>
+      <div class="mosaic-item reveal">
+        <img src="img/Chandra X-ray Observatory.jpg"></img>
+        <div class="mosaic-overlay">Chandra X-ray Observatory</div>
+      </div>
+    </div>
+  </div>
+  <p class="reveal" style="margin-bottom:5rem">I telescopi moderni hanno rivoluzionato lo studio delle stelle e dell’universo. Grazie a strumenti sempre più potenti, gli astronomi possono osservare oggetti lontanissimi e scoprire nuovi fenomeni spaziali.</p>
+</section>
+
+<!-- FINAL BANNER -->
+<div class="img-banner" style="height:85vh">
+  <img src="img/Galassie in collisione NGC 2207.jpg" alt="Galassie in collisione NGC 2207">
+  <span class="img-banner-caption">NASA / ESA — NGC 2207 e IC 2163 in collisione galattica</span>
+  <p class="img-banner-title" style="max-width:500px">Dove le galassie si scontrano, nascono miliardi di nuove stelle</p>
+</div>
+
+<!-- FOOTER -->
+<footer>
+  <p class="footer-sub">Astrofisica · Spettroscopia · Cosmologia</p>
+  <p class="footer-sub">Lorenzo Pozzi · Claudia Mazareanu · Luca Sportelli · Lorenzo Maccini </p>
+</footer>
+
+<script>
+// CURSOR
+const cursor=document.getElementById('cursor');
+const ring=document.getElementById('cursorRing');
+let mx=0,my=0,rx=0,ry=0;
+document.addEventListener('mousemove',e=>{
+  mx=e.clientX;my=e.clientY;
+  cursor.style.left=mx+'px';cursor.style.top=my+'px';
+});
+function animRing(){
+  rx+=(mx-rx)*0.12;ry+=(my-ry)*0.12;
+  ring.style.left=rx+'px';ring.style.top=ry+'px';
+  requestAnimationFrame(animRing);
+}
+animRing();
+
+// STARFIELD
+const canvas=document.getElementById('starfield');
+const ctx=canvas.getContext('2d');
+let stars=[];
+function resizeCanvas(){canvas.width=window.innerWidth;canvas.height=window.innerHeight}
+function createStars(){
+  stars=[];
+  for(let i=0;i<280;i++){
+    stars.push({
+      x:Math.random()*canvas.width,
+      y:Math.random()*canvas.height,
+      r:Math.random()*1.8+0.2,
+      a:Math.random(),
+      speed:Math.random()*0.002+0.001,
+      phase:Math.random()*Math.PI*2
+    });
+  }
+}
+let t=0;
+function drawStars(){
+  ctx.clearRect(0,0,canvas.width,canvas.height);
+  t+=0.01;
+  stars.forEach(s=>{
+    const alpha=s.a*(0.5+0.5*Math.sin(t*s.speed*100+s.phase));
+    ctx.beginPath();
+    ctx.arc(s.x,s.y,s.r,0,Math.PI*2);
+    ctx.fillStyle=`rgba(255,252,240,${alpha})`;
+    ctx.fill();
+  });
+  requestAnimationFrame(drawStars);
+}
+resizeCanvas();createStars();drawStars();
+window.addEventListener('resize',()=>{resizeCanvas();createStars()});
+
+// SCROLL REVEAL
+const observer=new IntersectionObserver(entries=>{
+  entries.forEach(e=>{
+    if(e.isIntersecting) e.target.classList.add('visible');
+  });
+},{threshold:0.1});
+document.querySelectorAll('.reveal,.feature-cell,.tl-item,.spec-type,.element-card,.spectrum-container').forEach(el=>observer.observe(el));
+
+// NAV SCROLL
+window.addEventListener('scroll',()=>{
+  const nav=document.querySelector('nav');
+  nav.style.background=window.scrollY>50?'rgba(6,6,15,0.9)':'rgba(6,6,15,0.5)';
+});
+
+// PARALLAX BANNERS
+window.addEventListener('scroll',()=>{
+  document.querySelectorAll('.img-banner img').forEach(img=>{
+    const rect=img.closest('.img-banner').getBoundingClientRect();
+    const pct=rect.top/window.innerHeight;
+    img.style.transform=`translateY(${pct*30}px) scale(1.05)`;
+  });
+});
+</script>
+</body>
+</html>
